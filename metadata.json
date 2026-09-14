@@ -1,0 +1,8 @@
+{
+  "name": "Google Auth & Profile Portal",
+  "description": "მთავარი გვერდი Google-ით ავტორიზაციით და მომხმარებლის პროფილით",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
