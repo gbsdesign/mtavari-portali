@@ -1,9 +1,45 @@
 @import "tailwindcss";
 
 :root {
-  --font-sans: 'Plus Jakarta Sans', 'Noto Sans Georgian', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: 'Noto Sans Georgian', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --page: 248 250 252;
+  --surface: 255 255 255;
+  --ink: 15 23 42;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
+  margin: 0;
   font-family: var(--font-sans);
+  background:
+    radial-gradient(circle at 15% 0%, rgba(37, 99, 235, 0.08), transparent 30%),
+    radial-gradient(circle at 85% 10%, rgba(99, 102, 241, 0.06), transparent 28%),
+    rgb(var(--page));
+  color: rgb(var(--ink));
+  text-rendering: optimizeLegibility;
+}
+
+.dark body {
+  background:
+    radial-gradient(circle at 15% 0%, rgba(37, 99, 235, 0.12), transparent 30%),
+    radial-gradient(circle at 85% 10%, rgba(99, 102, 241, 0.08), transparent 28%),
+    #020617;
+}
+
+::selection {
+  background: rgba(37, 99, 235, 0.18);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
 }
