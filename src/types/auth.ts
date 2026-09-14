@@ -10,12 +10,10 @@ export interface GoogleUserProfile {
   phone?: string;
   bio?: string;
   location?: string;
-  timezone?: string;
   language: string;
+  timezone: string;
   createdAt: string;
   lastLoginAt: string;
-  twoFactorEnabled: boolean;
-  role: string;
 }
 
 export interface ActivityLog {
@@ -23,17 +21,5 @@ export interface ActivityLog {
   action: string;
   description: string;
   timestamp: string;
-  device: string;
-  location: string;
-  ip: string;
-  type: 'login' | 'security' | 'profile' | 'connected_app';
-}
-
-export interface ConnectedApp {
-  id: string;
-  name: string;
-  icon: string;
-  connectedAt: string;
-  scope: string;
-  status: 'active' | 'revoked';
+  type: 'login' | 'security' | 'profile';
 }

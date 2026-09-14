@@ -1,17 +1,6 @@
 import React, { useState } from 'react';
-import { GoogleIcon } from './GoogleIcon';
 import { useAuth } from '../context/AuthContext';
-import {
-  User,
-  LogOut,
-  Shield,
-  Sun,
-  Moon,
-  ChevronDown,
-  LayoutDashboard,
-  ExternalLink,
-  Sparkles,
-} from 'lucide-react';
+import { ChevronDown, LogOut, Moon, Sun, User } from 'lucide-react';
 
 interface NavbarProps {
   currentView: 'home' | 'profile';
@@ -29,161 +18,87 @@ export const Navbar: React.FC<NavbarProps> = ({
   onToggleDarkMode,
 }) => {
   const { user, isAuthenticated, logout } = useAuth();
-  const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-4">
-        {/* Brand Logo */}
-        <div
-          onClick={() => onNavigate('home')}
-          className="flex items-center gap-3 cursor-pointer select-none group"
-        >
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-sky-500 flex items-center justify-center text-white shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform">
-            <Shield className="w-5 h-5" />
+    <header className="sticky top-0 z-40 border-b border-slate-200/70 bg-white/75 backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/75">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <button onClick={() => onNavigate('home')} className="group flex items-center gap-3 text-left">
+          <div className="grid h-9 w-9 place-items-center rounded-xl bg-slate-950 text-sm font-black text-white shadow-sm dark:bg-white dark:text-slate-950">მ</div>
+          <div className="hidden sm:block">
+            <div className="text-sm font-extrabold tracking-tight text-slate-950 dark:text-white">მთავარი პორტალი</div>
+            <div className="text-[11px] text-slate-500 dark:text-slate-400">პროფილი და პარამეტრები</div>
           </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="font-bold text-slate-900 dark:text-white text-base tracking-tight">
-                AuthPortal
-              </span>
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800/60">
-                Google SSO
-              </span>
-            </div>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400">
-              ავტორიზაცია & პროფილის მართვა
-            </p>
-          </div>
-        </div>
+        </button>
 
-        {/* Center Nav Links */}
-        <nav className="hidden md:flex items-center gap-1 bg-slate-100 dark:bg-slate-800/60 p-1 rounded-2xl border border-slate-200/60 dark:border-slate-700/50">
-          <button
-            onClick={() => onNavigate('home')}
-            className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
-              currentView === 'home'
-                ? 'bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 shadow-xs'
-                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
-            }`}
-          >
-            მთავარი გვერდი
-          </button>
-
-          <button
-            onClick={() => {
-              if (isAuthenticated) {
-                onNavigate('profile');
-              } else {
-                onOpenLoginModal();
-              }
-            }}
-            className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
-              currentView === 'profile'
-                ? 'bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 shadow-xs'
-                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
-            }`}
-          >
-            <User className="w-3.5 h-3.5" />
-            პროფილის გვერდი
-          </button>
+        <nav className="hidden items-center gap-1 rounded-xl border border-slate-200/80 bg-slate-100/70 p-1 md:flex dark:border-slate-800 dark:bg-slate-900/70">
+          {([
+            ['home', 'მთავარი'],
+            ['profile', 'პროფილი'],
+          ] as const).map(([view, label]) => (
+            <button
+              key={view}
+              onClick={() => (view === 'profile' && !isAuthenticated ? onOpenLoginModal() : onNavigate(view))}
+              className={`rounded-lg px-4 py-2 text-xs font-semibold transition ${
+                currentView === view
+                  ? 'bg-white text-slate-950 shadow-sm dark:bg-slate-800 dark:text-white'
+                  : 'text-slate-500 hover:text-slate-950 dark:text-slate-400 dark:hover:text-white'
+              }`}
+            >
+              {label}
+            </button>
+          ))}
         </nav>
 
-        {/* Right Actions: Theme toggle + Auth State */}
-        <div className="flex items-center gap-2 sm:gap-3">
-          {/* Dark / Light Toggle */}
+        <div className="flex items-center gap-2">
           <button
             onClick={onToggleDarkMode}
-            className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors cursor-pointer"
+            className="grid h-9 w-9 place-items-center rounded-xl border border-slate-200 bg-white text-slate-600 transition hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800"
             aria-label="თემის შეცვლა"
-            title={darkMode ? 'ღია რეჟიმი' : 'მუქი რეჟიმი'}
           >
-            {darkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-600" />}
+            {darkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </button>
 
-          {/* User Logged in / Guest */}
           {isAuthenticated && user ? (
             <div className="relative">
               <button
-                onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="flex items-center gap-2.5 p-1.5 sm:px-3 sm:py-1.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-blue-400 dark:hover:border-blue-500 transition-all cursor-pointer shadow-xs"
+                onClick={() => setOpen((value) => !value)}
+                className="flex h-9 items-center gap-2 rounded-xl border border-slate-200 bg-white px-2.5 text-xs font-semibold text-slate-700 transition hover:border-slate-300 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200"
               >
-                <img
-                  src={user.picture}
-                  alt={user.name}
-                  className="w-8 h-8 rounded-full object-cover ring-1 ring-blue-500/30"
-                />
-                <div className="hidden sm:block text-left">
-                  <span className="text-xs font-semibold text-slate-900 dark:text-white block leading-tight">
-                    {user.givenName || user.name}
-                  </span>
-                  <span className="text-[10px] text-slate-500 dark:text-slate-400 block leading-tight truncate max-w-[120px]">
-                    {user.email}
-                  </span>
+                <div className="grid h-6 w-6 place-items-center overflow-hidden rounded-lg bg-slate-100 dark:bg-slate-800">
+                  {user.picture ? <img src={user.picture} alt="" className="h-full w-full object-cover" /> : <User className="h-3.5 w-3.5" />}
                 </div>
-                <ChevronDown className="w-3.5 h-3.5 text-slate-400 hidden sm:block" />
+                <span className="hidden max-w-28 truncate sm:block">{user.givenName || user.name}</span>
+                <ChevronDown className="h-3.5 w-3.5 text-slate-400" />
               </button>
 
-              {/* User Dropdown */}
-              {dropdownOpen && (
+              {open && (
                 <>
-                  <div
-                    className="fixed inset-0 z-30"
-                    onClick={() => setDropdownOpen(false)}
-                  />
-                  <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 py-2 z-40 animate-in fade-in zoom-in-95 duration-150">
-                    <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-800">
-                      <div className="flex items-center gap-2">
-                        <GoogleIcon className="w-4 h-4 shrink-0" />
-                        <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                          Google ანგარიში
-                        </span>
-                      </div>
-                      <p className="text-sm font-semibold text-slate-900 dark:text-white mt-1">
-                        {user.name}
-                      </p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
-                        {user.email}
-                      </p>
+                  <button className="fixed inset-0 z-30 cursor-default" onClick={() => setOpen(false)} aria-label="მენიუს დახურვა" />
+                  <div className="absolute right-0 z-40 mt-2 w-60 rounded-2xl border border-slate-200 bg-white p-2 shadow-2xl shadow-slate-950/10 dark:border-slate-800 dark:bg-slate-900">
+                    <div className="border-b border-slate-100 px-3 py-2.5 dark:border-slate-800">
+                      <div className="truncate text-sm font-bold text-slate-950 dark:text-white">{user.name}</div>
+                      <div className="truncate text-xs text-slate-500">{user.email}</div>
                     </div>
-
-                    <div className="p-1 space-y-0.5">
-                      <button
-                        onClick={() => {
-                          onNavigate('profile');
-                          setDropdownOpen(false);
-                        }}
-                        className="w-full px-3 py-2 text-xs font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl flex items-center gap-2 transition-colors cursor-pointer"
-                      >
-                        <User className="w-4 h-4 text-blue-500" />
-                        პროფილის ნახვა
-                      </button>
-
-                      <button
-                        onClick={() => {
-                          onNavigate('home');
-                          setDropdownOpen(false);
-                        }}
-                        className="w-full px-3 py-2 text-xs font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl flex items-center gap-2 transition-colors cursor-pointer"
-                      >
-                        <LayoutDashboard className="w-4 h-4 text-indigo-500" />
-                        მთავარი გვერდი
-                      </button>
-                    </div>
-
-                    <div className="p-1 border-t border-slate-100 dark:border-slate-800 mt-1">
-                      <button
-                        onClick={() => {
-                          logout();
-                          setDropdownOpen(false);
-                          onNavigate('home');
-                        }}
-                        className="w-full px-3 py-2 text-xs font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-xl flex items-center gap-2 transition-colors cursor-pointer"
-                      >
-                        <LogOut className="w-4 h-4" />
-                        სისტემიდან გასვლა
-                      </button>
-                    </div>
+                    <button
+                      onClick={() => {
+                        onNavigate('profile');
+                        setOpen(false);
+                      }}
+                      className="mt-1 flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-xs font-semibold text-slate-700 hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-800"
+                    >
+                      <User className="h-4 w-4" /> პროფილი
+                    </button>
+                    <button
+                      onClick={() => {
+                        logout();
+                        onNavigate('home');
+                        setOpen(false);
+                      }}
+                      className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-xs font-semibold text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/20"
+                    >
+                      <LogOut className="h-4 w-4" /> გასვლა
+                    </button>
                   </div>
                 </>
               )}
@@ -191,11 +106,9 @@ export const Navbar: React.FC<NavbarProps> = ({
           ) : (
             <button
               onClick={onOpenLoginModal}
-              className="flex items-center gap-2 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-2xl bg-white dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 hover:border-blue-500 dark:hover:border-blue-500 hover:shadow-md transition-all cursor-pointer font-semibold text-xs sm:text-sm shadow-xs"
-              id="google-signin-btn"
+              className="h-9 rounded-xl bg-slate-950 px-4 text-xs font-bold text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200"
             >
-              <GoogleIcon className="w-4 h-4" />
-              <span>Google-ით შესვლა</span>
+              შესვლა
             </button>
           )}
         </div>
