@@ -1,111 +1,36 @@
-import React from 'react';
-import { ArrowRight, Check, User } from 'lucide-react';
+import { ArrowDown, ArrowUpRight, Check, Fingerprint, Layers3, LockKeyhole, Sparkles, UserRound, MoveUpRight, SlidersHorizontal } from 'lucide-react';
+import { GoogleIcon } from './GoogleIcon';
 import { useAuth } from '../context/AuthContext';
-
-interface HomePageProps {
-  onNavigateToProfile: () => void;
-  onOpenLoginModal: () => void;
+export function HomePage({
+  onEnter
+}: {
+  onEnter: () => void;
+}) {
+  const {
+    user
+  } = useAuth();
+  return <>
+    <section className="hero page-width">
+      <div className="hero-copy"><div className="eyebrow"><span className="status-dot" /> შენი სივრცის ახალი დასაწყისი</div>
+        <h1>ყველაფერი იწყება<br /><span>შენით.</span><span className="heading-star" aria-hidden="true">✳</span></h1>
+        <p className="hero-description">ერთი ანგარიში. შენი პერსონალური სივრცე.<br />შედი მარტივად და მოაწყვე ყველაფერი შენებურად.</p>
+        <div className="hero-actions"><button className="button primary" onClick={onEnter}>{user ? <UserRound size={20} /> : <GoogleIcon className="google-icon" />}{user ? 'ჩემი სივრცის გახსნა' : 'გაგრძელება Google-ით'}<ArrowUpRight size={19} /></button><a className="text-link" href="#possibilities">აღმოაჩინე მეტი <ArrowDown size={17} /></a></div>
+        <div className="hero-assurance"><span><Check size={14} /> პაროლის გარეშე</span><span><Check size={14} /> შენი კონტროლით</span></div>
+      </div>
+      <div className="hero-art" aria-label="პერსონალური პროფილის ილუსტრაცია">
+        <div className="orbit orbit-one" /><div className="orbit orbit-two" /><div className="orb" /><span className="art-coordinate">YOUR WORLD, CONNECTED.</span><span className="orbit-point" />
+        <div className="floating-tag tag-secure"><span className="mini-icon"><LockKeyhole size={16} /></span><div>მხოლოდ შენთვის<small>პერსონალური სივრცე</small></div><span className="tiny-dot" /></div>
+        <div className="preview-card"><div className="preview-top"><span>მთავარი ID</span><span className="preview-label">პროფილის ნიმუში</span></div><div className="preview-avatar"><UserRound size={43} strokeWidth={1.1} /><span><Check size={12} /></span></div><h2>შენი სახელი</h2><p>შენი სივრცე იწყება აქ</p><div className="preview-divider" /><div className="preview-meta"><span>ანგარიში<small>Google</small></span><span>სივრცე<small>პერსონალური</small></span></div><div className="preview-bottom"><span className="mini-bars">▥</span><span>ერთი ანგარიში. მეტი შესაძლებლობა.</span><ArrowUpRight size={18} /></div></div>
+        <div className="floating-tag tag-yours"><span className="lime-icon"><Sparkles size={18} /></span><div>შენებურად.<small>ყველა დეტალში</small></div></div><span className="art-index">01 / შენი ციფრული იდენტობა</span>
+      </div>
+    </section>
+    <div className="principles page-width"><span className="principles-intro">მარტივი იდეა.<br /><strong>უკეთესი გამოცდილება.</strong></span><span><Fingerprint />ერთი იდენტობა</span><span><Layers3 />ერთიანი სივრცე</span><span><SlidersHorizontal />სრული კონტროლი</span><span className="principles-arrow"><MoveUpRight /></span></div>
+    <section className="features page-width" id="possibilities"><div className="section-heading"><div><div className="eyebrow muted">01 — შესაძლებლობები</div><h2>შენი ყოველდღიურობა.<br /><span>ახალი პერსპექტივით.</span></h2></div><p>ნაკლები ზედმეტი ნაბიჯი.<br />მეტი ადგილი იმისთვის, რაც შენია.</p></div>
+      <div className="feature-grid"><article className="feature-card feature-lime"><span className="feature-number">01 / მარტივი დასაწყისი</span><div className="google-visual"><GoogleIcon className="google-large" /><span className="connection-line" /><span className="connection-check"><Check /></span></div><h3>ერთი შეხებით შიგნით.</h3><p>შედი Google-ის ანგარიშით.<br />ახალი პაროლის დამახსოვრების გარეშე.</p><button className="round-link" aria-label="Google-ით შესვლა" onClick={onEnter}><ArrowUpRight /></button></article>
+      <article className="feature-card"><span className="feature-number">02 / შენი პროფილი</span><div className="profile-visual"><span className="abstract-avatar"><UserRound /></span><span><i /><i /></span><span className="edit-chip"><SlidersHorizontal size={15} /></span></div><h3>შენ შესახებ. შენებურად.</h3><p>სახელი, ფოტო და შენს შესახებ ინფორმაცია —<br />ყველაფერი ერთ პერსონალურ გვერდზე.</p><button className="round-link" aria-label="პროფილის გახსნა" onClick={onEnter}><ArrowUpRight /></button></article>
+      <article className="feature-card"><span className="feature-number">03 / სიმარტივე</span><div className="control-visual"><span>შენი სივრცე</span><span className="visual-toggle"><Check size={12} /></span><div className="control-line" /><span>შენი არჩევანი</span><span className="visual-toggle"><Check size={12} /></span></div><h3>ყველაფერი თავის ადგილზე.</h3><p>განაახლე პროფილი და მართე სესია<br />კომპიუტერიდან ან ტელეფონიდან.</p><button className="round-link" aria-label="პერსონალური სივრცის გახსნა" onClick={onEnter}><ArrowUpRight /></button></article></div>
+    </section>
+    <section className="how-section page-width" id="how-it-works"><div><div className="eyebrow muted">02 — პირველი ნაბიჯი</div><h2>დაიწყე მარტივად.<br /><span>დანარჩენი შენია.</span></h2><button className="text-link" onClick={onEnter}>გახსენი შენი სივრცე <ArrowUpRight size={19} /></button></div><ol className="steps"><li><span>01</span><div><h3>აირჩიე Google-ის ანგარიში</h3><p>გამოიყენე ანგარიში, რომელსაც უკვე ენდობი.</p></div></li><li><span>02</span><div><h3>შეავსე შენი პროფილი</h3><p>დაამატე ინფორმაცია, რომელიც შენ წარმოგაჩენს.</p></div></li><li><span>03</span><div><h3>იგრძენი თავი შენს სივრცეში</h3><p>დაბრუნდი და განაახლე ინფორმაცია ნებისმიერ დროს.</p></div></li></ol></section>
+    <section className="bottom-cta page-width"><span className="cta-star" aria-hidden="true">✳</span><div><div className="eyebrow">მზად ხარ?</div><h2>შენი შემდეგი ნაბიჯი — აქ.</h2></div><button className="button dark-button" onClick={onEnter}>შემოდი შენს სივრცეში <ArrowUpRight size={20} /></button></section>
+  </>;
 }
-
-export const HomePage: React.FC<HomePageProps> = ({ onNavigateToProfile, onOpenLoginModal }) => {
-  const { user, isAuthenticated } = useAuth();
-
-  return (
-    <div className="py-8 sm:py-12 lg:py-16">
-      <section className="relative overflow-hidden rounded-[28px] border border-slate-200/80 bg-white/85 p-6 shadow-[0_20px_70px_rgba(15,23,42,0.08)] backdrop-blur sm:p-10 lg:p-14 dark:border-slate-800 dark:bg-slate-900/80">
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-500/70 to-transparent" />
-        <div className="absolute -right-20 -top-24 h-72 w-72 rounded-full bg-blue-500/10 blur-3xl" />
-
-        <div className="relative grid gap-10 lg:grid-cols-[1.15fr_.85fr] lg:items-center">
-          <div>
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-bold text-slate-600 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-              მთავარი პორტალი
-            </div>
-
-            <h1 className="max-w-3xl text-4xl font-black tracking-[-0.04em] text-slate-950 sm:text-5xl lg:text-6xl dark:text-white">
-              ყველაფერი მნიშვნელოვანი — ერთ სუფთა სივრცეში.
-            </h1>
-
-            <p className="mt-5 max-w-2xl text-sm leading-7 text-slate-600 sm:text-base dark:text-slate-300">
-              მართე პროფილი, პირადი ინფორმაცია და შენი ანგარიშის პარამეტრები ზედმეტი ხმაურის გარეშე.
-            </p>
-
-            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-              {isAuthenticated && user ? (
-                <button
-                  onClick={onNavigateToProfile}
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-slate-950 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-slate-950/10 transition hover:-translate-y-0.5 hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200"
-                >
-                  <User className="h-4 w-4" />
-                  პროფილის გახსნა
-                  <ArrowRight className="h-4 w-4" />
-                </button>
-              ) : (
-                <button
-                  onClick={onOpenLoginModal}
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-slate-950 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-slate-950/10 transition hover:-translate-y-0.5 hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200"
-                >
-                  ანგარიშში შესვლა
-                  <ArrowRight className="h-4 w-4" />
-                </button>
-              )}
-
-              <button
-                onClick={() => (isAuthenticated ? onNavigateToProfile() : onOpenLoginModal())}
-                className="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
-              >
-                პარამეტრების ნახვა
-              </button>
-            </div>
-          </div>
-
-          <div className="relative">
-            <div className="rounded-3xl border border-slate-200/90 bg-slate-50/90 p-4 dark:border-slate-800 dark:bg-slate-950/70">
-              <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-                <div className="flex items-center justify-between gap-4">
-                  <div>
-                    <div className="text-xs font-semibold text-slate-400">ანგარიში</div>
-                    <div className="mt-1 text-base font-extrabold text-slate-950 dark:text-white">
-                      {isAuthenticated && user ? user.name : 'შენი პროფილი'}
-                    </div>
-                    <div className="mt-1 text-xs text-slate-500">
-                      {isAuthenticated && user ? user.email : 'შესვლის შემდეგ აქ გამოჩნდება შენი ინფორმაცია'}
-                    </div>
-                  </div>
-                  <div className="grid h-11 w-11 place-items-center rounded-2xl bg-slate-950 text-white dark:bg-white dark:text-slate-950">
-                    <User className="h-5 w-5" />
-                  </div>
-                </div>
-
-                <div className="mt-5 grid gap-2.5 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-                  {['პირადი ინფორმაცია', 'პროფილის პარამეტრები', 'აქტივობის ისტორია', 'თემის არჩევა'].map((item) => (
-                    <div key={item} className="flex items-center gap-2 rounded-xl border border-slate-100 bg-slate-50 px-3 py-2.5 text-xs font-semibold text-slate-600 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300">
-                      <span className="grid h-5 w-5 place-items-center rounded-full bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400">
-                        <Check className="h-3 w-3" />
-                      </span>
-                      {item}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="mt-8 grid gap-4 md:grid-cols-3">
-        {[
-          ['სუფთა ინტერფეისი', 'მხოლოდ საჭირო ინფორმაცია, ზედმეტი ბეიჯებისა და გამოგონილი სტატუსების გარეშე.'],
-          ['სწრაფი მართვა', 'პროფილის მთავარი მოქმედებები ერთ ადგილას და მარტივად გასაგები სტრუქტურით.'],
-          ['თანამედროვე დიზაინი', 'რბილი სიღრმე, მკაფიო ტიპოგრაფია და მოწესრიგებული responsive განლაგება.'],
-        ].map(([title, description]) => (
-          <article key={title} className="rounded-2xl border border-slate-200/80 bg-white/75 p-5 backdrop-blur transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-slate-950/5 dark:border-slate-800 dark:bg-slate-900/65">
-            <h2 className="text-sm font-extrabold text-slate-950 dark:text-white">{title}</h2>
-            <p className="mt-2 text-xs leading-6 text-slate-500 dark:text-slate-400">{description}</p>
-          </article>
-        ))}
-      </section>
-    </div>
-  );
-};

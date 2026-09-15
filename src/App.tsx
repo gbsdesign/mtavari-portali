@@ -1,106 +1,61 @@
-import React, { Component, ErrorInfo, ReactNode, useEffect, useState } from 'react';
-import { AuthProvider } from './context/AuthContext';
+import { Component, type ReactNode, useState } from 'react';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { Navbar } from './components/Navbar';
 import { HomePage } from './components/HomePage';
 import { ProfilePage } from './components/ProfilePage';
 import { GoogleLoginModal } from './components/GoogleLoginModal';
-import { safeStorage } from './utils/storage';
-import { RefreshCw } from 'lucide-react';
-
-interface ErrorBoundaryProps {
+import { ArrowUpRight } from 'lucide-react';
+class ErrorBoundary extends Component<{
   children: ReactNode;
-}
-
-interface ErrorBoundaryState {
-  hasError: boolean;
-}
-
-class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  state: ErrorBoundaryState = { hasError: false };
-
-  static getDerivedStateFromError(): ErrorBoundaryState {
-    return { hasError: true };
+}, {
+  failed: boolean;
+}> {
+  state = {
+    failed: false
+  };
+  static getDerivedStateFromError() {
+    return {
+      failed: true
+    };
   }
-
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('Application error:', error, errorInfo);
-  }
-
   render() {
-    if (this.state.hasError) {
-      return (
-        <div className="grid min-h-screen place-items-center bg-slate-50 p-6 dark:bg-slate-950">
-          <div className="w-full max-w-md rounded-3xl border border-slate-200 bg-white p-8 text-center shadow-xl dark:border-slate-800 dark:bg-slate-900">
-            <h1 className="text-xl font-black text-slate-950 dark:text-white">გვერდი ვერ ჩაიტვირთა</h1>
-            <p className="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">სცადე აპლიკაციის ხელახლა ჩატვირთვა.</p>
-            <button onClick={() => window.location.reload()} className="mx-auto mt-5 inline-flex items-center gap-2 rounded-xl bg-slate-950 px-4 py-2.5 text-xs font-bold text-white dark:bg-white dark:text-slate-950">
-              <RefreshCw className="h-4 w-4" /> ხელახლა ჩატვირთვა
-            </button>
-          </div>
-        </div>
-      );
-    }
-
-    return this.props.children;
+    return this.state.failed ? <div className="error-page"><h1>გვერდი ვერ ჩაიტვირთა</h1><button className="button primary" onClick={() => location.reload()}>ხელახლა ცდა</button></div> : this.props.children;
   }
 }
-
-function AppContent() {
-  const [currentView, setCurrentView] = useState<'home' | 'profile'>('home');
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [darkMode, setDarkMode] = useState(() => safeStorage.getItem('app_theme_mode') === 'dark');
-
-  useEffect(() => {
-    document.documentElement.classList.toggle('dark', darkMode);
-    safeStorage.setItem('app_theme_mode', darkMode ? 'dark' : 'light');
-  }, [darkMode]);
-
-  return (
-    <div className="min-h-screen text-slate-900 transition-colors dark:text-slate-100">
-      <Navbar
-        currentView={currentView}
-        onNavigate={setCurrentView}
-        onOpenLoginModal={() => setIsLoginModalOpen(true)}
-        darkMode={darkMode}
-        onToggleDarkMode={() => setDarkMode((value) => !value)}
-      />
-
-      <main className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-        {currentView === 'home' ? (
-          <HomePage
-            onNavigateToProfile={() => setCurrentView('profile')}
-            onOpenLoginModal={() => setIsLoginModalOpen(true)}
-          />
-        ) : (
-          <ProfilePage
-            onBackToHome={() => setCurrentView('home')}
-            onOpenLoginModal={() => setIsLoginModalOpen(true)}
-          />
-        )}
-      </main>
-
-      <footer className="mx-auto mt-6 max-w-7xl px-4 pb-8 sm:px-6 lg:px-8">
-        <div className="flex flex-col gap-2 border-t border-slate-200/70 pt-5 text-[11px] text-slate-400 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
-          <span>მთავარი პორტალი</span>
-          <span>სუფთა ინტერფეისი • რეალური მონაცემების პრინციპი</span>
-        </div>
-      </footer>
-
-      <GoogleLoginModal
-        isOpen={isLoginModalOpen}
-        onClose={() => setIsLoginModalOpen(false)}
-        onSuccess={() => setCurrentView('profile')}
-      />
-    </div>
-  );
+function Portal() {
+  const {
+    user,
+    isLoading,
+    error,
+    refresh
+  } = useAuth();
+  const [view, setView] = useState<'home' | 'profile'>(() => location.hash === '#profile' ? 'profile' : 'home');
+  const [login, setLogin] = useState(false);
+  const navigate = (next: 'home' | 'profile') => {
+    setView(next);
+    try {
+      history.replaceState(null, '', next === 'profile' ? '#profile' : location.pathname);
+    } catch {/* Sandboxed previews may restrict history. */}
+    window.scrollTo({
+      top: 0,
+      behavior: 'instant'
+    });
+  };
+  const enter = () => user ? navigate('profile') : setLogin(true);
+  return <div className="app-shell">
+    <Navbar currentView={view} onNavigate={navigate} onOpenLoginModal={() => setLogin(true)} />
+    {error && <div className="connection-error" role="alert">{error}<button onClick={() => void refresh()}>ხელახლა ცდა</button></div>}
+    <main id="main-content">{isLoading ? <div className="loading-page" role="status">იტვირთება…</div> : view === 'profile' ? <ProfilePage onBackToHome={() => navigate('home')} onOpenLoginModal={() => setLogin(true)} /> : <HomePage onEnter={enter} />}</main>
+    <footer className="site-footer"><a className="brand" href="#" onClick={e => {
+        e.preventDefault();
+        navigate('home');
+      }}><span className="brand-symbol">მ</span>მთავარი<span className="brand-dot">.</span></a><span>შენი ციფრული სივრცე.</span><a href="#main-content">დასაწყისში დაბრუნება <ArrowUpRight size={15} /></a><small>© {new Date().getFullYear()} მთავარი პორტალი</small></footer>
+    <GoogleLoginModal isOpen={login} onClose={() => setLogin(false)} onSuccess={() => {
+      setLogin(false);
+      navigate('profile');
+    }} />
+  </div>;
 }
-
 export default function App() {
-  return (
-    <ErrorBoundary>
-      <AuthProvider>
-        <AppContent />
-      </AuthProvider>
-    </ErrorBoundary>
-  );
+  return <ErrorBoundary><AuthProvider><Portal /></AuthProvider></ErrorBoundary>;
 }
